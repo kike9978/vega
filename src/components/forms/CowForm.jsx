@@ -1,3 +1,4 @@
+import Button from "../Button";
 import Select from "../Select";
 import Input from "./Input";
 
@@ -6,7 +7,7 @@ export default function CowForm({ onSubmit }) {
 
     return (
         <form
-            className="flex flex-col"
+            className="flex flex-col gap-2 w-80 m-5"
             action=""
             onSubmit={(e) => {
                 e.preventDefault()
@@ -64,10 +65,8 @@ export default function CowForm({ onSubmit }) {
 
             <Input name="isRegistered" type="checkbox" label="Registrado" />
 
-
-
-            <button type="button" onClick={() => document.querySelector("dialog").close()}>x</button>
-            <button>Crear vaca</button>
+            <Button text={"✖️"} onClick={() => document.querySelector("dialog").close()} type={"button"} />
+            <Button text={"Crear vaca"} />
         </form>
     )
 }

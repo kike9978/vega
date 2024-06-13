@@ -1,6 +1,6 @@
 export default function Dialog({ children, open }) {
     return (
-        <dialog >
+        <dialog className="rounded-lg">
             {children}
         </dialog>
     )

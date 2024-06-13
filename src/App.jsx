@@ -4,6 +4,7 @@ import CowService from './cow/cow.service'
 import { useState } from 'react'
 import Dialog from './components/Dialog'
 import CowForm from './components/forms/CowForm'
+import Button from './components/Button'
 
 const cowService = new CowService()
 function App() {
@@ -26,7 +27,7 @@ function App() {
 
   return (
     <>
-      <button onClick={onOpenModalClick}>Crear vaca</button>
+      <Button onClick={onOpenModalClick} text={"Añadir ganado"} />
       <CowGrid cows={cows} />
       <Dialog >
         <CowForm onSubmit={handleCreateCow} />
