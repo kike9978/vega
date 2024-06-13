@@ -1,8 +1,8 @@
-export default function Input({ name }) {
+export default function Input({ name, type, label }) {
     return (
         <label htmlFor="">
-            {name}
-            <input type="text" name={name} />
+            {label}
+            <input name={name} type={type ? type : "text"} />
         </label>
     )
 }
