@@ -24,8 +24,17 @@ export default function CowForm({ onSubmit }) {
             <Input name="name" label="Vaca" />
             <Input name="id" label="Arete" />
             <Input name="birthDate" label="Fecha de nacimiento" type="date" />
-            <Input name="opp" label="Opp" />
+            <Input name="upp" label="Upp" />
             <Input name="mark" label="Fierro" />
+
+            <label htmlFor="">
+                Cruza
+                <select name="breed" id="breed">
+                    <option value="ill">Ill</option>
+                    <option value="orr">Orr</option>
+                    <option value="mich">Mich</option>
+                </select>
+            </label>
             <Input name="isRegistered" type="checkbox" label="Registrado" />
 
 

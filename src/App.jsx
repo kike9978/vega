@@ -15,9 +15,6 @@ function App() {
     setCows(cowService.getCows())
   }
 
-  function openCreateCowModal() {
-    setModalOpen(true)
-  }
 
   function onOpenModalClick() {
     document.querySelector("dialog").showModal()
@@ -29,7 +26,7 @@ function App() {
 
   return (
     <>
-      <button onClick={onOpenModalClick}>crea vaca</button>
+      <button onClick={onOpenModalClick}>Crear vaca</button>
       <CowGrid cows={cows} />
       <Dialog >
         <CowForm onSubmit={handleCreateCow} />

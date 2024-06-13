@@ -1,10 +1,11 @@
 export default class Cow {
-    constructor(name, id, birthDate, opp, mark, isRegistered) {
+    constructor(name, id, birthDate, upp, mark, isRegistered, breed) {
         this.name = name;
         this.id = id;
         this.birthDate = birthDate
-        this.opp = opp;
+        this.upp = upp;
         this.mark = mark;
         this.isRegistered = isRegistered;
+        this.breed = breed
     }
 }
