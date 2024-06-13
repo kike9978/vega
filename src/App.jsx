@@ -10,8 +10,8 @@ function App() {
   const [cows, setCows] = useState(cowService.getCows())
 
 
-  function createCow() {
-    cowService.createCow({ name: "Lola", id: 1234, birthDate: "10 de mayo", opp: "tacahuite", mark: "IL", isRegistered: true })
+  function createCow(cowData) {
+    cowService.createCow(cowData)
     setCows(cowService.getCows())
   }
 
@@ -22,8 +22,8 @@ function App() {
   function onOpenModalClick() {
     document.querySelector("dialog").showModal()
   }
-  function handleCreateCow() {
-    createCow()
+  function handleCreateCow(cowData) {
+    createCow(cowData)
   }
 
 

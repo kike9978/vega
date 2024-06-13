@@ -8,6 +8,7 @@ export default class CowService {
     }
 
     createCow(cow) {
+        console.log(cow)
         if (!this.cows) {
             this.cows = [new Cow(cow.name, cow.id, cow.birthDate, cow.opp, cow.mark, cow.isRegistered)]
             return

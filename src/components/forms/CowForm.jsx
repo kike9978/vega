@@ -2,17 +2,26 @@ import Input from "./Input";
 
 
 export default function CowForm({ onSubmit }) {
+    const dialog = document.querySelector("dialog")
+
     return (
         <form
             className="flex flex-col"
             action=""
             onSubmit={(e) => {
                 e.preventDefault()
-                onSubmit()
-                document.querySelector("dialog").close()
+                const form = e.target
+
+                const formData = new FormData(form)
+                const formObj = Object.fromEntries(formData.entries())
+                console.log(formObj)
+
+                onSubmit(formObj)
+                form.reset()
+                dialog.close()
             }}>
 
-            <Input name="cow" label="vaca" />
+            <Input name="name" label="Vaca" />
             <Input name="id" label="Arete" />
             <Input name="birthDate" label="Fecha de nacimiento" type="date" />
             <Input name="opp" label="Opp" />
