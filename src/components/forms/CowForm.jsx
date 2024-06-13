@@ -1,3 +1,4 @@
+import Select from "../Select";
 import Input from "./Input";
 
 
@@ -21,20 +22,46 @@ export default function CowForm({ onSubmit }) {
                 dialog.close()
             }}>
 
-            <Input name="name" label="Vaca" />
-            <Input name="id" label="Arete" />
+            <Input name="name" label="Vaca" required={true} />
+            <Input name="id" label="Arete" required={true} />
             <Input name="birthDate" label="Fecha de nacimiento" type="date" />
-            <Input name="upp" label="Upp" />
-            <Input name="mark" label="Fierro" />
 
-            <label htmlFor="">
-                Cruza
-                <select name="breed" id="breed">
-                    <option value="ill">Ill</option>
-                    <option value="orr">Orr</option>
-                    <option value="mich">Mich</option>
-                </select>
-            </label>
+            <Select
+                defaultOption={{ value: "tacahuite", text: "Tacahuite" }}
+                label="Upp"
+                name="upp"
+                options={[
+                    {
+                        value: "otherUpp",
+                        text: "Otro Upp"
+                    },
+                ]} />
+            <Select
+                defaultOption={{ value: "iL", text: "IL" }}
+                label="Fierro"
+                name="mark"
+                options={[
+                    {
+                        value: "fM",
+                        text: "FM"
+                    },
+                ]} />
+            <Select
+                defaultOption={{ value: "ill", text: "Ill" }}
+                label="Cruza"
+                name="breed"
+                options={[
+                    {
+                        value: "orr",
+                        text: "Orr"
+                    },
+                    {
+                        value: "mich",
+                        text: "Mich"
+                    }
+                ]} />
+
+
             <Input name="isRegistered" type="checkbox" label="Registrado" />
 
 
