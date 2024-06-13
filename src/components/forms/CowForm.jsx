@@ -2,7 +2,6 @@ import Input from "./Input";
 
 
 export default function CowForm({ onSubmit }) {
-    const dialog = document.querySelector("dialog")
 
     return (
         <form
@@ -10,6 +9,7 @@ export default function CowForm({ onSubmit }) {
             action=""
             onSubmit={(e) => {
                 e.preventDefault()
+                const dialog = document.querySelector("dialog")
                 const form = e.target
 
                 const formData = new FormData(form)
