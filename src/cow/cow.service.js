@@ -1,12 +1,22 @@
 import Cow from "./cow.model"
+import data from "../data/data"
 
 export default class CowService {
-    constructor(cows) {
-        this.cows = cows.foreach(cow => new Cow(cow.name, cow.id, cow.birthdate, cow.pp, cow.mark, cow.isRegistered))
+    constructor() {
+        this.cows = data.forEach(cow => new Cow(cow.name, cow.id, cow.birthDate, cow.opp, cow.mark, cow.isRegistered))
+        console.log(this.cows)
     }
 
     createCow(cow) {
-        this.cows = [...this.cows, new Cow(cow.name, cow.id, cow.birthdate, cow.pp, cow.mark, cow.isRegistered)]
+        if (!this.cows) {
+            this.cows = [new Cow(cow.name, cow.id, cow.birthDate, cow.opp, cow.mark, cow.isRegistered)]
+            return
+        }
+        this.cows = [...this.cows, new Cow(cow.name, cow.id, cow.birthDate, cow.opp, cow.mark, cow.isRegistered)]
+    }
+
+    getCows() {
+        return this.cows
     }
 
 }
