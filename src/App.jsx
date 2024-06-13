@@ -1,8 +1,9 @@
 
-import './App.css'
 import CowGrid from './components/CowGrid'
 import CowService from './cow/cow.service'
 import { useState } from 'react'
+import Dialog from './components/Dialog'
+import CowForm from './components/forms/CowForm'
 
 const cowService = new CowService()
 function App() {
@@ -14,10 +15,25 @@ function App() {
     setCows(cowService.getCows())
   }
 
+  function openCreateCowModal() {
+    setModalOpen(true)
+  }
+
+  function onOpenModalClick() {
+    document.querySelector("dialog").showModal()
+  }
+  function handleCreateCow() {
+    createCow()
+  }
+
+
   return (
     <>
-      <button onClick={createCow}> crea vaca</button>
+      <button onClick={onOpenModalClick}>crea vaca</button>
       <CowGrid cows={cows} />
+      <Dialog >
+        <CowForm onSubmit={handleCreateCow} />
+      </Dialog>
     </>
   )
 }
