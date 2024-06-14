@@ -34,8 +34,8 @@ export default function CowForm({ onSubmit }) {
                 name="upp"
                 options={[
                     {
-                        value: "otherUpp",
-                        text: "Otro Upp"
+                        value: "elJobo",
+                        text: "El Jobo"
                     },
                 ]} />
             <Select

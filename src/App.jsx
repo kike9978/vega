@@ -83,6 +83,7 @@ function App() {
     falseCows.forEach(cow => {
       createCow(cow)
     })
+
   }
 
 

@@ -3,7 +3,7 @@ import Chip from "./Chip"
 
 export default function CowCard({ name, id, upp, mark, isRegistered, birthDate, breed, sex }) {
 
-    const sexText = sex === "male" ? "Macho" : "Hembra"
+    const sexText = sex === "male" ? "♂️" : "♀️"
 
     return (
         <article className="rounded-lg border border-black border-solid overflow-hidden">
