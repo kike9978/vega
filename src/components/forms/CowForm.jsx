@@ -8,7 +8,7 @@ export default function CowForm({ onSubmit }) {
 
     return (
         <form
-            className="flex flex-col gap-2 w-80 m-5"
+            className="flex flex-col gap-2 md:w-80 m-5"
             action=""
             onSubmit={(e) => {
                 e.preventDefault()
