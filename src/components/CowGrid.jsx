@@ -14,7 +14,8 @@ export default function CowGrid({ cows }) {
                         isRegistered={cow.isRegistered}
                         mark={cow.mark}
                         breed={cow.breed}
-                        upp={cow.upp} />
+                        upp={cow.upp}
+                        sex={cow.sex} />
                 )
             })}
         </div>

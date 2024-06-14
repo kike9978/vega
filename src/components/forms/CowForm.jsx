@@ -1,4 +1,5 @@
 import Button from "../Button";
+import RadioFieldset from "../RadioFieldset";
 import Select from "../Select";
 import Input from "./Input";
 
@@ -64,8 +65,26 @@ export default function CowForm({ onSubmit }) {
 
 
             <Input name="isRegistered" type="checkbox" label="Registrado" />
+            <RadioFieldset
+                legend={"Sexo"}
+                name={"sex"}
+                radios={[
+                    {
+                        value: "male",
+                        label: "Macho"
+                    },
+                    {
+                        value: "female",
+                        label: "Hembra",
+                    }
+                ]}
+            />
 
-            <Button text={"✖️"} onClick={() => document.querySelector("dialog").close()} type={"button"} />
+            <Button
+                text={"✖️"}
+                onClick={() => document.querySelector("dialog").close()}
+                type={"button"}
+                severity={"none"} />
             <Button text={"Crear vaca"} />
         </form>
     )
