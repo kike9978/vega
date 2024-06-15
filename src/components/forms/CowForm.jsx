@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Button from "../Button";
 import RadioFieldset from "../RadioFieldset";
 import Select from "../Select";
@@ -5,6 +6,8 @@ import Input from "./Input";
 
 
 export default function CowForm({ onSubmit }) {
+    const [isCowRegistered, setIsCowRegistered] = useState(false)
+    const [idValue, setIdValue] = useState("")
 
     return (
         <form
@@ -25,7 +28,15 @@ export default function CowForm({ onSubmit }) {
             }}>
 
             <Input name="name" label="Vaca" required={true} />
-            <Input name="id" label="Arete" required={true} />
+            <Input
+                name="isRegistered"
+                type="checkbox"
+                label="Con arete"
+                onChange={(e) => {
+                    setIsCowRegistered(e.target.checked)
+                    setIdValue("")
+                }} />
+            <Input name="id" label="Código de arete" required={isCowRegistered} disabled={!isCowRegistered} value={idValue} onChange={(e) => setIdValue(e.target.value)} />
             <Input name="birthDate" label="Fecha de nacimiento" type="date" />
 
             <Select
@@ -64,7 +75,6 @@ export default function CowForm({ onSubmit }) {
                 ]} />
 
 
-            <Input name="isRegistered" type="checkbox" label="Registrado" />
             <RadioFieldset
                 legend={"Sexo"}
                 name={"sex"}

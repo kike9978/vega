@@ -1,9 +1,17 @@
-export default function Input({ name, type, label, required }) {
+export default function Input({ name, type, label, required, disabled, onChange, value }) {
 
     return (
-        <label htmlFor="" className={`flex ${type === "checkbox" ? "" : "flex-col"} text-slate-700`}>
+        <label htmlFor="" className={`flex ${type === "checkbox" ? "" : "flex-col"} text-slate-700 ${disabled ? "disabled:text-slate-300" : ""}`}>
             {label}
-            <input name={name} type={type ? type : "text"} required={required} className="border rounded-sm px-2" />
+            <input
+                name={name}
+                type={type ? type : "text"}
+                required={required}
+                disabled={disabled}
+                className="border rounded-sm px-2"
+                onChange={onChange}
+                value={value}
+            />
         </label>
     )
 }
