@@ -19,7 +19,7 @@ function App() {
 
   }, [])
 
-
+  const date = new Date()
   const filteredCowsByText = cows.filter(cow => !(cow.name.toLowerCase().indexOf(filterText.toLowerCase()) === -1))
   const filteredCows = filteredCowsByText.filter(cow => {
     if (!filterSex) {
@@ -46,6 +46,8 @@ function App() {
   }
 
   function onPopulateMockClick() {
+    console.log(Date.parse())
+    console.log(`${date.getFullYear()}-${date.getMonth() < 9 ? "0" + date.getMonth() : date.getMonth()}-${date.getDate()}`)
     const falseCows = [
       {
         name: "Pícaro",
@@ -54,7 +56,9 @@ function App() {
         id: 1234,
         breed: "ill",
         isRegistered: true,
-        mark: "il"
+        mark: "il",
+        birthDate: "2024-06-14",
+
       },
       {
         name: "Juanelo",
@@ -62,7 +66,8 @@ function App() {
         upp: "tacahuite",
         breed: "ill",
         isRegistered: false,
-        mark: "il"
+        mark: "il",
+        birthDate: "2018-06-14",
       },
       {
         name: "Luna",
@@ -71,7 +76,8 @@ function App() {
         id: 3456,
         breed: "ill",
         isRegistered: true,
-        mark: "il"
+        mark: "il",
+        birthDate: "2022-06-14",
       },
       {
         name: "Serafina",
@@ -79,7 +85,8 @@ function App() {
         upp: "tacahuite",
         breed: "ill",
         isRegistered: false,
-        mark: "il"
+        mark: "il",
+        birthDate: "2011-06-14",
       },
       {
         name: "Manzana",
@@ -88,7 +95,8 @@ function App() {
         id: 5678,
         breed: "ill",
         isRegistered: true,
-        mark: "il"
+        mark: "il",
+        birthDate: "2015-06-14",
       },
       {
         name: "Garroba",
@@ -97,7 +105,8 @@ function App() {
         id: 6789,
         breed: "ill",
         isRegistered: true,
-        mark: "il"
+        mark: "il",
+        birthDate: "2012-06-14",
       },
     ]
 
@@ -106,6 +115,7 @@ function App() {
     })
 
   }
+
 
 
   return (

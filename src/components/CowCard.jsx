@@ -4,6 +4,7 @@ import Chip from "./Chip"
 export default function CowCard({ name, id, upp, mark, isRegistered, birthDate, breed, sex }) {
 
     const sexText = sex === "male" ? "♂️" : "♀️"
+    const date = new Date()
 
     return (
         <article className="rounded-lg border border-black border-solid overflow-hidden">
@@ -14,7 +15,7 @@ export default function CowCard({ name, id, upp, mark, isRegistered, birthDate, 
                 <Chip text={upp} />
                 {isRegistered ? "🟢" : "🔴"}
                 <p>{sexText}</p>
-                <p>{birthDate}</p>
+                <p>{date.getFullYear() - birthDate.getFullYear()} años</p>
                 <p>{mark}</p>
                 <p>{breed}</p>
             </div>
