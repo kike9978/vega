@@ -2,6 +2,7 @@ import CowCard from "./CowCard";
 
 export default function CowGrid({ cows }) {
 
+
     return (
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 px-4">
             {cows && cows.map(cow => {

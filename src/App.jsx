@@ -1,21 +1,34 @@
 
 import CowGrid from './components/CowGrid'
 import CowService from './cow/cow.service'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Dialog from './components/Dialog'
 import CowForm from './components/forms/CowForm'
 import Button from './components/Button'
 
 const cowService = new CowService()
 function App() {
-  const [cows, setCows] = useState(cowService.getCows())
+  const [cows, setCows] = useState([])
+  const [filterText, setFilterText] = useState("")
 
+  useEffect(() => {
+    const initialCows = cowService.getCows() || [];
+    setCows(initialCows);
+
+
+  }, [])
+
+
+  const filteredCows = cows.filter(cow => !(cow.name.toLowerCase().indexOf(filterText.toLowerCase()) === -1))
+
+  function handleFilterCows(e) {
+    setFilterText(e.target.value)
+  }
 
   function createCow(cowData) {
     cowService.createCow(cowData)
     setCows(cowService.getCows())
   }
-
 
   function onOpenModalClick() {
     document.querySelector("dialog").showModal()
@@ -91,7 +104,8 @@ function App() {
     <>
       <Button onClick={onOpenModalClick} text={"Añadir ganado"} />
       <Button onClick={onPopulateMockClick} text={"Llenar con info de prueba"} />
-      <CowGrid cows={cows} />
+      <input type="text" onChange={(e) => handleFilterCows(e)} value={filterText} />
+      <CowGrid cows={filteredCows} />
       <Dialog >
         <CowForm onSubmit={handleCreateCow} />
       </Dialog>
