@@ -10,6 +10,7 @@ const cowService = new CowService()
 function App() {
   const [cows, setCows] = useState([])
   const [filterText, setFilterText] = useState("")
+  const [filterSex, setFilterSex] = useState("")
 
   useEffect(() => {
     const initialCows = cowService.getCows() || [];
@@ -19,7 +20,14 @@ function App() {
   }, [])
 
 
-  const filteredCows = cows.filter(cow => !(cow.name.toLowerCase().indexOf(filterText.toLowerCase()) === -1))
+  const filteredCowsByText = cows.filter(cow => !(cow.name.toLowerCase().indexOf(filterText.toLowerCase()) === -1))
+  const filteredCows = filteredCowsByText.filter(cow => {
+    if (!filterSex) {
+      return true
+    }
+
+    return cow.sex === filterSex
+  })
 
   function handleFilterCows(e) {
     setFilterText(e.target.value)
@@ -105,6 +113,9 @@ function App() {
       <Button onClick={onOpenModalClick} text={"Añadir ganado"} />
       <Button onClick={onPopulateMockClick} text={"Llenar con info de prueba"} />
       <input type="text" onChange={(e) => handleFilterCows(e)} value={filterText} />
+      <Button text={"Ver vacas"} onClick={() => setFilterSex("female")} />
+      <Button text={"Ver toros"} onClick={() => setFilterSex("male")} />
+      <Button text={"Limpiar"} onClick={() => setFilterSex("")} />
       <CowGrid cows={filteredCows} />
       <Dialog >
         <CowForm onSubmit={handleCreateCow} />
