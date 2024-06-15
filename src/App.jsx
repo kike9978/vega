@@ -127,7 +127,7 @@ function App() {
       <Button text={"Ver toros"} onClick={() => setFilterSex("male")} />
       <Button text={"Limpiar"} onClick={() => setFilterSex("")} />
       <CowGrid cows={filteredCows} />
-      <Dialog >
+      <Dialog title={"Registrar ganado"}>
         <CowForm onSubmit={handleCreateCow} />
       </Dialog>
     </>

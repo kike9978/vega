@@ -27,7 +27,7 @@ export default function CowForm({ onSubmit }) {
                 dialog.close()
             }}>
 
-            <Input name="name" label="Vaca" required={true} />
+            <Input name="name" label="Nombre" required={true} />
             <Input
                 name="isRegistered"
                 type="checkbox"
