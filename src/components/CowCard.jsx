@@ -1,12 +1,9 @@
 import cowImage from "../assets/imgs/vaca-test.webp"
 import Chip from "./Chip"
+import { SEX_TEXT, UPP_TEXT, MARK_TEXT } from "../data/types"
 
-export default function CowCard({ name, id, upp, mark, isRegistered, birthDate, breed, sex }) {
+export default function CowCard({ name, upp, mark, isRegistered, birthDate, breed, sex, earingId, hasEaring }) {
 
-    const SEX_TEXT = {
-        male: "🐂",
-        female: "🐄",
-    }
     const date = new Date()
 
 
@@ -14,14 +11,17 @@ export default function CowCard({ name, id, upp, mark, isRegistered, birthDate, 
         <article className="rounded-lg border border-black border-solid overflow-hidden">
             <img src={cowImage} alt="Foto de vaca" />
             <div className="px-2">
-                <h2 className="text-xl font-bold">{name}</h2>
-                <h3>{id}</h3>
-                <Chip text={upp} />
-                {isRegistered ? "🟢" : "🔴"}
+                <h2 className="text-xl font-bold text-center">{name}</h2>
+
+                <div className="flex  justify-between">
+                    <p>{date.getFullYear() - birthDate.getFullYear()} años</p>
+                    <p>Fierro: {MARK_TEXT[mark]}</p>
+                    <p>Cruza: {breed}</p>
+                </div>
+                <h3 className={`${!isRegistered && "text-red-500"}`}>Arete: {isRegistered ? earingId : "Sin registro"}</h3>
+                <Chip text={UPP_TEXT[upp]} />
                 <p>{SEX_TEXT[sex]}</p>
-                <p>{date.getFullYear() - birthDate.getFullYear()} años</p>
-                <p>Fierro: {mark}</p>
-                <p>Cruza: {breed}</p>
+                {!hasEaring && isRegistered && <p>Sin arete 🚨</p>}
             </div>
 
         </article>

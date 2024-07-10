@@ -7,7 +7,7 @@ import Input from "./Input";
 
 export default function CowForm({ onSubmit }) {
     const [isCowRegistered, setIsCowRegistered] = useState(false)
-    const [idValue, setIdValue] = useState("")
+    const [earingIdValue, setEaringIdValue] = useState("")
 
     return (
         <form
@@ -24,6 +24,8 @@ export default function CowForm({ onSubmit }) {
 
                 onSubmit(formObj)
                 form.reset()
+                setIsCowRegistered(false)
+                setEaringIdValue("")
                 dialog.close()
             }}>
 
@@ -31,12 +33,18 @@ export default function CowForm({ onSubmit }) {
             <Input
                 name="isRegistered"
                 type="checkbox"
-                label="Con arete"
+                label="Está registrado"
                 onChange={(e) => {
                     setIsCowRegistered(e.target.checked)
-                    setIdValue("")
                 }} />
-            <Input name="id" label="Código de arete" required={isCowRegistered} disabled={!isCowRegistered} value={idValue} onChange={(e) => setIdValue(e.target.value)} />
+            <Input name="earingId" label="Código de arete" required={isCowRegistered} disabled={!isCowRegistered} value={earingIdValue} onChange={(e) => setEaringIdValue(e.target.value)} />
+            <Input
+                disabled={!isCowRegistered}
+                name="hasEaring"
+                type="checkbox"
+                label="Tiene arete"
+                checked={true}
+            />
             <Input name="birthDate" label="Fecha de nacimiento" type="date" />
 
             <Select

@@ -42,7 +42,7 @@ function App() {
     document.querySelector("dialog").showModal()
   }
   function handleCreateCow(cowData) {
-    createCow(cowData)
+    createCow({ ...cowData, id: crypto.randomUUID() })
   }
 
   function onPopulateMockClick() {
@@ -53,60 +53,74 @@ function App() {
         name: "Pícaro",
         sex: "male",
         upp: "tacahuite",
-        id: 1234,
+        id: crypto.randomUUID(),
         breed: "ill",
         isRegistered: true,
         mark: "il",
         birthDate: "2024-06-14",
+        hasEaring: true,
+        earingId: 432124,
 
       },
       {
         name: "Juanelo",
         sex: "male",
         upp: "tacahuite",
+        id: crypto.randomUUID(),
         breed: "ill",
         isRegistered: false,
         mark: "il",
         birthDate: "2018-06-14",
+        hasEaring: true,
+        earingId: "",
       },
       {
         name: "Luna",
         sex: "female",
         upp: "tacahuite",
-        id: 3456,
+        id: crypto.randomUUID(),
         breed: "ill",
         isRegistered: true,
         mark: "il",
         birthDate: "2022-06-14",
+        hasEaring: true,
+        earingId: 25,
       },
       {
         name: "Serafina",
         sex: "female",
         upp: "tacahuite",
+        id: crypto.randomUUID(),
         breed: "ill",
         isRegistered: false,
         mark: "il",
         birthDate: "2011-06-14",
+        hasEaring: true,
+        earingId: "",
       },
       {
         name: "Manzana",
         sex: "female",
         upp: "tacahuite",
-        id: 5678,
+        id: crypto.randomUUID(),
         breed: "ill",
         isRegistered: true,
         mark: "il",
         birthDate: "2015-06-14",
+        hasEaring: true,
+        earingId: 23452,
       },
       {
         name: "Garroba",
         sex: "female",
         upp: "tacahuite",
-        id: 6789,
+        id: crypto.randomUUID(),
         breed: "ill",
         isRegistered: true,
         mark: "il",
         birthDate: "2012-06-14",
+        hasEaring: true,
+        earingId: 1235,
       },
     ]
 

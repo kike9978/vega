@@ -1,5 +1,5 @@
 export default class Cow {
-    constructor(name, id, birthDate, upp, mark, isRegistered, breed, sex) {
+    constructor(name, id, birthDate, upp, mark, isRegistered, breed, sex, hasEaring, earingId) {
         this.name = name;
         this.id = id;
         this.birthDate = birthDate
@@ -8,5 +8,7 @@ export default class Cow {
         this.isRegistered = isRegistered;
         this.breed = breed
         this.sex = sex
+        this.hasEaring = hasEaring;
+        this.earingId = earingId
     }
 }
