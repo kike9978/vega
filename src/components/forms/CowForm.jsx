@@ -10,6 +10,14 @@ export default function CowForm({ onSubmit }) {
     const [earingIdValue, setEaringIdValue] = useState("")
     const [hasEaringValue, setHasEaringValue] = useState(true)
 
+
+    function resetForm() {
+        const form = document.querySelector("dialog form")
+        form.reset()
+        setIsCowRegistered(false)
+        setEaringIdValue("")
+    }
+
     return (
         <form
             className="flex flex-col gap-4 md:w-80 m-5"
@@ -24,9 +32,7 @@ export default function CowForm({ onSubmit }) {
                 console.log(formObj)
 
                 onSubmit(formObj)
-                form.reset()
-                setIsCowRegistered(false)
-                setEaringIdValue("")
+                resetForm()
                 dialog.close()
             }}>
 
@@ -108,7 +114,12 @@ export default function CowForm({ onSubmit }) {
             <div className="flex justify-between">
                 <Button
                     text={"Cancel"}
-                    onClick={() => document.querySelector("dialog").close()}
+                    onClick={() => {
+
+                        resetForm()
+                        document.querySelector("dialog").close()
+                    }
+                    }
                     type={"button"}
                     severity={"none"} />
                 <Button text={"Crear vaca"} />
