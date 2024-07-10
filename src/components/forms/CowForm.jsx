@@ -12,7 +12,7 @@ export default function CowForm({ onSubmit }) {
 
     return (
         <form
-            className="flex flex-col gap-2 md:w-80 m-5"
+            className="flex flex-col gap-4 md:w-80 m-5"
             action=""
             onSubmit={(e) => {
                 e.preventDefault()
@@ -50,42 +50,6 @@ export default function CowForm({ onSubmit }) {
             />
             <Input name="birthDate" label="Fecha de nacimiento" type="date" />
 
-            <Select
-                defaultOption={{ value: "tacahuite", text: "Tacahuite" }}
-                label="Upp"
-                name="upp"
-                options={[
-                    {
-                        value: "elJobo",
-                        text: "El Jobo"
-                    },
-                ]} />
-            <Select
-                defaultOption={{ value: "iL", text: "IL" }}
-                label="Fierro"
-                name="mark"
-                options={[
-                    {
-                        value: "fM",
-                        text: "FM"
-                    },
-                ]} />
-            <Select
-                defaultOption={{ value: "ill", text: "Ill" }}
-                label="Cruza"
-                name="breed"
-                options={[
-                    {
-                        value: "orr",
-                        text: "Orr"
-                    },
-                    {
-                        value: "mich",
-                        text: "Mich"
-                    }
-                ]} />
-
-
             <RadioFieldset
                 legend={"Sexo"}
                 name={"sex"}
@@ -101,12 +65,54 @@ export default function CowForm({ onSubmit }) {
                 ]}
             />
 
-            <Button
-                text={"✖️"}
-                onClick={() => document.querySelector("dialog").close()}
-                type={"button"}
-                severity={"none"} />
-            <Button text={"Crear vaca"} />
+            <div className="flex justify-between">
+                <Select
+                    defaultOption={{ value: "tacahuite", text: "Tacahuite" }}
+                    label="UPP"
+                    name="upp"
+                    options={[
+                        {
+                            value: "elJobo",
+                            text: "El Jobo"
+                        },
+                    ]} />
+                <Select
+                    defaultOption={{ value: "iL", text: "IL" }}
+                    label="Fierro"
+                    name="mark"
+                    options={[
+                        {
+                            value: "fM",
+                            text: "FM"
+                        },
+                    ]} />
+                <Select
+                    defaultOption={{ value: "ill", text: "Ill" }}
+                    label="Cruza"
+                    name="breed"
+                    options={[
+                        {
+                            value: "orr",
+                            text: "Orr"
+                        },
+                        {
+                            value: "mich",
+                            text: "Mich"
+                        }
+                    ]} />
+            </div>
+
+
+
+
+            <div className="flex justify-between">
+                <Button
+                    text={"Cancel"}
+                    onClick={() => document.querySelector("dialog").close()}
+                    type={"button"}
+                    severity={"none"} />
+                <Button text={"Crear vaca"} />
+            </div>
         </form>
     )
 }

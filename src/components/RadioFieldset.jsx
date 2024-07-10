@@ -5,7 +5,7 @@ export default function RadioFieldset({ legend, radios, name }) {
     return (
         <fieldset>
             <legend>{legend}:</legend>
-            <div>
+            <div className="flex justify-between">
                 {radios.map(radio => {
                     return (<RadioButton name={name} label={radio.label} value={radio.value} key={radio.value} />)
                 })}
