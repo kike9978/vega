@@ -8,6 +8,7 @@ import Input from "./Input";
 export default function CowForm({ onSubmit }) {
     const [isCowRegistered, setIsCowRegistered] = useState(false)
     const [earingIdValue, setEaringIdValue] = useState("")
+    const [hasEaringValue, setHasEaringValue] = useState(true)
 
     return (
         <form
@@ -34,6 +35,7 @@ export default function CowForm({ onSubmit }) {
                 name="isRegistered"
                 type="checkbox"
                 label="Está registrado"
+                checked={isCowRegistered}
                 onChange={(e) => {
                     setIsCowRegistered(e.target.checked)
                 }} />
@@ -43,7 +45,8 @@ export default function CowForm({ onSubmit }) {
                 name="hasEaring"
                 type="checkbox"
                 label="Tiene arete"
-                checked={true}
+                checked={hasEaringValue}
+                onChange={(e) => setHasEaringValue(e.target.checked)}
             />
             <Input name="birthDate" label="Fecha de nacimiento" type="date" />
 

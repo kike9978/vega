@@ -18,10 +18,12 @@ export default function CowCard({ name, upp, mark, isRegistered, birthDate, bree
                     <p>Fierro: {MARK_TEXT[mark]}</p>
                     <p>Cruza: {breed}</p>
                 </div>
-                <h3 className={`${!isRegistered && "text-red-500"}`}>Arete: {isRegistered ? earingId : "Sin registro"}</h3>
+                <div className="flex gap-2">
+                    <h3 className={`${!isRegistered && "text-red-500"}`}>Arete: {isRegistered ? earingId : "Sin registro"}</h3>
+                    {!hasEaring && isRegistered && <p className="text-red-500">🚨 Sin arete 🚨</p>}
+                </div>
                 <Chip text={UPP_TEXT[upp]} />
                 <p>{SEX_TEXT[sex]}</p>
-                {!hasEaring && isRegistered && <p>Sin arete 🚨</p>}
             </div>
 
         </article>
