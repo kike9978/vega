@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Button from "../Button";
 import RadioFieldset from "../RadioFieldset";
 import Select from "../Select";
@@ -23,6 +23,8 @@ export default function CowForm({ onSubmit, onClose, initialData = null }) {
     const [earingIdValue, setEaringIdValue] = useState(initialData?.earingId || "");
     const [hasEaringValue, setHasEaringValue] = useState(initialData?.hasEaring ?? true);
     const [errors, setErrors] = useState({})
+    const [imagePreview, setImagePreview] = useState(initialData?.imageUrl || null);
+    const fileInputRef = useRef(null);
 
     // Update form data when initialData changes
     useEffect(() => {
@@ -91,6 +93,18 @@ export default function CowForm({ onSubmit, onClose, initialData = null }) {
         return Object.keys(newErrors).length === 0;
     };
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Convert to base64 for preview and storage
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -102,7 +116,8 @@ export default function CowForm({ onSubmit, onClose, initialData = null }) {
             hasEaring: hasEaringValue,
             earingId: earingIdValue,
             birthDate: new Date(data.birthDate),
-            id: initialData?.id // Keep the same ID if editing
+            imageUrl: imagePreview,
+            id: initialData?.id
         };
 
         if (!validateForm(cowData)) {
@@ -114,6 +129,50 @@ export default function CowForm({ onSubmit, onClose, initialData = null }) {
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                    Foto
+                </label>
+                <div className="flex items-center gap-4">
+                    <div className="relative w-32 h-32 bg-gray-100 rounded-lg overflow-hidden">
+                        {imagePreview ? (
+                            <img
+                                src={imagePreview}
+                                alt="Preview"
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <div className="flex items-center justify-center w-full h-full text-gray-400">
+                                <span>Sin imagen</span>
+                            </div>
+                        )}
+                    </div>
+                    <div className="space-y-2">
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            ref={fileInputRef}
+                            className="hidden"
+                        />
+                        <Button
+                            type="button"
+                            text="Seleccionar imagen"
+                            onClick={() => fileInputRef.current.click()}
+                            className="bg-gray-100 hover:bg-gray-200 text-gray-700"
+                        />
+                        {imagePreview && (
+                            <Button
+                                type="button"
+                                text="Eliminar imagen"
+                                onClick={() => setImagePreview(null)}
+                                className="bg-red-100 hover:bg-red-200 text-red-700"
+                            />
+                        )}
+                    </div>
+                </div>
+            </div>
+
             <Input 
                 name="name" 
                 label="Nombre" 

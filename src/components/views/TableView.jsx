@@ -3,12 +3,15 @@ import { SEX_TEXT, UPP_TEXT, MARK_TEXT } from '../../data/types';
 import Button from '../Button';
 import MoreOptionsMenu from '../common/MoreOptionsMenu';
 import { useState } from 'react';
+import ImageModal from '../modals/ImageModal';
 
 export default function TableView({ cows, onDelete, selectedCows, onSelect, getMenuOptions }) {
   const [sortConfig, setSortConfig] = useState({
     key: null,
     direction: 'asc'
   });
+
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleSort = (key) => {
     let direction = 'asc';
@@ -61,130 +64,151 @@ export default function TableView({ cows, onDelete, selectedCows, onSelect, getM
   const sortedCows = getSortedCows();
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <input
-                type="checkbox"
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                checked={cows.length > 0 && cows.every(cow => selectedCows.has(cow.id))}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    onSelect(new Set(cows.map(cow => cow.id)));
-                  } else {
-                    onSelect(new Set());
-                  }
-                }}
-              />
-            </th>
-            <th 
-              scope="col" 
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-              onClick={() => handleSort('name')}
-            >
-              Nombre {getSortIcon('name')}
-            </th>
-            <th 
-              scope="col" 
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-              onClick={() => handleSort('sex')}
-            >
-              Sexo {getSortIcon('sex')}
-            </th>
-            <th 
-              scope="col" 
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-              onClick={() => handleSort('upp')}
-            >
-              UPP {getSortIcon('upp')}
-            </th>
-            <th 
-              scope="col" 
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-              onClick={() => handleSort('mark')}
-            >
-              Fierro {getSortIcon('mark')}
-            </th>
-            <th 
-              scope="col" 
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-              onClick={() => handleSort('isRegistered')}
-            >
-              Registro {getSortIcon('isRegistered')}
-            </th>
-            <th 
-              scope="col" 
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-              onClick={() => handleSort('earingId')}
-            >
-              Arete {getSortIcon('earingId')}
-            </th>
-            <th 
-              scope="col" 
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-              onClick={() => handleSort('birthDate')}
-            >
-              Fecha de Nacimiento {getSortIcon('birthDate')}
-            </th>
-            <th 
-              scope="col" 
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-              onClick={() => handleSort('breed')}
-            >
-              Cruza {getSortIcon('breed')}
-            </th>
-            <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Acciones
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {sortedCows.map((cow) => {
-            return (
-              <tr key={cow.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <input
-                    type="checkbox"
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    checked={selectedCows.has(cow.id)}
-                    onChange={() => onSelect(cow.id)}
-                  />
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {cow.name}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {SEX_TEXT[cow.sex]}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {UPP_TEXT[cow.upp]}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {MARK_TEXT[cow.mark]}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {cow.isRegistered ? "Registrado" : "Sin registrar"}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {cow.hasEaring ? cow.earingId : "Sin arete"}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {cow.birthDate.toLocaleDateString()}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {cow.breed}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                  <MoreOptionsMenu options={getMenuOptions(cow)} />
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+    <>
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <input
+                  type="checkbox"
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  checked={cows.length > 0 && cows.every(cow => selectedCows.has(cow.id))}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      onSelect(new Set(cows.map(cow => cow.id)));
+                    } else {
+                      onSelect(new Set());
+                    }
+                  }}
+                />
+              </th>
+              <th 
+                scope="col" 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                onClick={() => handleSort('name')}
+              >
+                Nombre {getSortIcon('name')}
+              </th>
+              <th 
+                scope="col" 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                onClick={() => handleSort('sex')}
+              >
+                Sexo {getSortIcon('sex')}
+              </th>
+              <th 
+                scope="col" 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                onClick={() => handleSort('upp')}
+              >
+                UPP {getSortIcon('upp')}
+              </th>
+              <th 
+                scope="col" 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                onClick={() => handleSort('mark')}
+              >
+                Fierro {getSortIcon('mark')}
+              </th>
+              <th 
+                scope="col" 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                onClick={() => handleSort('isRegistered')}
+              >
+                Registro {getSortIcon('isRegistered')}
+              </th>
+              <th 
+                scope="col" 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                onClick={() => handleSort('earingId')}
+              >
+                Arete {getSortIcon('earingId')}
+              </th>
+              <th 
+                scope="col" 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                onClick={() => handleSort('birthDate')}
+              >
+                Fecha de Nacimiento {getSortIcon('birthDate')}
+              </th>
+              <th 
+                scope="col" 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                onClick={() => handleSort('breed')}
+              >
+                Cruza {getSortIcon('breed')}
+              </th>
+              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {sortedCows.map((cow) => {
+              return (
+                <tr key={cow.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <input
+                      type="checkbox"
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      checked={selectedCows.has(cow.id)}
+                      onChange={() => onSelect(cow.id)}
+                    />
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {cow.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {SEX_TEXT[cow.sex]}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {UPP_TEXT[cow.upp]}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {MARK_TEXT[cow.mark]}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {cow.isRegistered ? "Registrado" : "Sin registrar"}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {cow.hasEaring ? cow.earingId : "Sin arete"}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {cow.birthDate.toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {cow.breed}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {cow.imageUrl && (
+                      <img
+                        src={cow.imageUrl}
+                        alt={`Foto de ${cow.name}`}
+                        className="w-12 h-12 rounded object-cover cursor-pointer"
+                        onClick={() => setSelectedImage(cow)}
+                      />
+                    )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                    <MoreOptionsMenu options={getMenuOptions(cow)} />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {selectedImage && (
+        <ImageModal
+          isOpen={!!selectedImage}
+          onClose={() => setSelectedImage(null)}
+          imageUrl={selectedImage.imageUrl}
+          cowName={selectedImage.name}
+        />
+      )}
+    </>
   );
 }
 
@@ -201,6 +225,7 @@ TableView.propTypes = {
       earingId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       birthDate: PropTypes.instanceOf(Date).isRequired,
       breed: PropTypes.string.isRequired,
+      imageUrl: PropTypes.string,
     })
   ).isRequired,
   onDelete: PropTypes.func.isRequired,
