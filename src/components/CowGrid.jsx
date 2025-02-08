@@ -1,6 +1,7 @@
 import CowCard from "./CowCard";
+import PropTypes from 'prop-types';
 
-export default function CowGrid({ cows }) {
+export default function CowGrid({ cows, onDelete }) {
 
 
     return (
@@ -34,6 +35,7 @@ export default function CowGrid({ cows }) {
                             sex={cow.sex}
                             earingId={cow.earingId}
                             hasEaring={cow.hasEaring}
+                            onDelete={() => onDelete(cow)}
                         />
                     )
                 })}
@@ -42,3 +44,8 @@ export default function CowGrid({ cows }) {
     )
 
 }
+
+CowGrid.propTypes = {
+    cows: PropTypes.arrayOf(PropTypes.object).isRequired,
+    onDelete: PropTypes.func.isRequired,
+};

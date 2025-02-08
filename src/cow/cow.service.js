@@ -9,17 +9,21 @@ export default class CowService {
     }
 
     createCow(cow) {
-        console.log(cow)
-        if (!this.cows) {
-            this.cows = [new Cow(cow.name, cow.id, new Date(cow.birthDate), cow.upp, cow.mark, cow.isRegistered, cow.breed, cow.sex, cow.hasEaring, cow.earingId)]
-            return
-        }
-        this.cows = [...this.cows, new Cow(cow.name, cow.id, new Date(cow.birthDate), cow.upp, cow.mark, cow.isRegistered, cow.breed, cow.sex, cow.hasEaring, cow.earingId)]
-        localStorage.setItem("cows", JSON.stringify(this.cows))
+        const cows = this.getCows();
+        const updatedCows = [...cows, cow];
+        localStorage.setItem('cows', JSON.stringify(updatedCows));
     }
 
     getCows() {
-        return this.cows
+        const cows = localStorage.getItem('cows');
+        if (!cows) return [];
+        return JSON.parse(cows).map(cow => ({
+            ...cow,
+            birthDate: new Date(cow.birthDate)
+        }));
     }
 
+    setCows(cows) {
+        localStorage.setItem('cows', JSON.stringify(cows));
+    }
 }

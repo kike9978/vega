@@ -13,6 +13,12 @@ import PageContainer from './components/layout/PageContainer'
 import Card from './components/layout/Card'
 import PageHeader from './components/layout/PageHeader'
 import Modal from './components/modals/Modal'
+import TableView from './components/views/TableView'
+import SelectButton from './components/common/SelectButton'
+import ConfirmationModal from './components/modals/ConfirmationModal'
+import BatchOperations from './components/BatchOperations'
+import { VIEW_MODES } from './constants/viewModes'
+import { exportToExcel } from './utils/exportUtils'
 
 const cowService = new CowService()
 
@@ -30,6 +36,9 @@ function App() {
     birthDateTo: '',
     upp: '',
   })
+  const [viewMode, setViewMode] = useState(VIEW_MODES.CARD)
+  const [cowToDelete, setCowToDelete] = useState(null)
+  const [selectedCows, setSelectedCows] = useState(new Set())
 
   const {
     filterText,
@@ -89,12 +98,96 @@ function App() {
     mockCows.forEach(cow => createCow(cow))
   }
 
+  const handleDelete = (cow) => {
+    setCowToDelete(cow);
+  };
+
+  const handleSelect = (cowId) => {
+    setSelectedCows(prev => {
+      const newSelected = new Set(prev);
+      if (newSelected.has(cowId)) {
+        newSelected.delete(cowId);
+      } else {
+        newSelected.add(cowId);
+      }
+      return newSelected;
+    });
+  };
+
+  const handleBatchDelete = () => {
+    if (selectedCows.size > 0) {
+      setCowToDelete({
+        ids: Array.from(selectedCows),
+        name: `${selectedCows.size} ${selectedCows.size === 1 ? 'elemento' : 'elementos'}`
+      });
+    }
+  };
+
+  const confirmDelete = () => {
+    if (cowToDelete) {
+      let updatedCows;
+      if (Array.isArray(cowToDelete.ids)) {
+        // Batch delete
+        updatedCows = cows.filter(cow => !cowToDelete.ids.includes(cow.id));
+        setSelectedCows(new Set());
+      } else {
+        // Single delete
+        updatedCows = cows.filter(cow => cow.id !== cowToDelete.id);
+      }
+      setCows(updatedCows);
+      cowService.setCows(updatedCows);
+      setCowToDelete(null);
+    }
+  };
+
+  const handleBatchExport = () => {
+    if (selectedCows.size > 0) {
+      const selectedCowsData = finalFilteredCows.filter(cow => 
+        selectedCows.has(cow.id)
+      );
+      exportToExcel(selectedCowsData, 'ganado_seleccionado');
+    }
+  };
+
+  // Add export all functionality
+  const handleExportAll = () => {
+    exportToExcel(finalFilteredCows, 'ganado_completo');
+  };
+
+  const viewOptions = [
+    {
+      value: VIEW_MODES.CARD,
+      label: 'Vista de tarjetas',
+      icon: '🗂️'
+    },
+    {
+      value: VIEW_MODES.TABLE,
+      label: 'Vista de tabla',
+      icon: '📋'
+    }
+  ];
+
   const headerActions = (
     <>
+      <BatchOperations 
+        selectedCount={selectedCows.size}
+        onDelete={handleBatchDelete}
+        onExport={handleBatchExport}
+      />
+      <SelectButton 
+        options={viewOptions}
+        value={viewMode}
+        onChange={setViewMode}
+      />
       <Button 
         onClick={() => setIsModalOpen(true)} 
         text="Añadir ganado"
         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+      />
+      <Button 
+        onClick={handleExportAll}
+        text="Exportar todo"
+        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
       />
       <Button 
         onClick={handlePopulateMock} 
@@ -126,7 +219,21 @@ function App() {
       </Card>
 
       <Card>
-        <CowGrid cows={finalFilteredCows} />
+        {viewMode === VIEW_MODES.CARD ? (
+          <CowGrid 
+            cows={finalFilteredCows}
+            onDelete={handleDelete}
+            selectedCows={selectedCows}
+            onSelect={handleSelect}
+          />
+        ) : (
+          <TableView 
+            cows={finalFilteredCows}
+            onDelete={handleDelete}
+            selectedCows={selectedCows}
+            onSelect={handleSelect}
+          />
+        )}
       </Card>
 
       <Modal
@@ -146,6 +253,14 @@ function App() {
           onFilterChange={setAdvancedFilters}
         />
       </SidePanel>
+
+      <ConfirmationModal
+        isOpen={!!cowToDelete}
+        onClose={() => setCowToDelete(null)}
+        onConfirm={confirmDelete}
+        title="Eliminar ganado"
+        message={`¿Estás seguro que deseas eliminar a ${cowToDelete?.name}?`}
+      />
     </PageContainer>
   )
 }

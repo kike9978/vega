@@ -5,8 +5,10 @@ import CardHeader from "./cards/CardHeader"
 import DetailItem from "./cards/DetailItem"
 import { getCowImage } from "../data/cowImages"
 import Tooltip from "./common/Tooltip"
+import Button from "./Button"
+import MoreOptionsMenu from './common/MoreOptionsMenu'
 
-export default function CowCard({ id, name, upp, mark, isRegistered, birthDate, breed, sex, earingId, hasEaring }) {
+export default function CowCard({ id, name, upp, mark, isRegistered, birthDate, breed, sex, earingId, hasEaring, onDelete, selected, onSelect }) {
     const date = new Date()
     const months = date.getMonth() - birthDate.getMonth() + 
       (date.getDate() < birthDate.getDate() ? -1 : 0)
@@ -29,6 +31,16 @@ export default function CowCard({ id, name, upp, mark, isRegistered, birthDate, 
         </div>
     )
 
+    const menuOptions = [
+      {
+        label: 'Eliminar',
+        onClick: () => onDelete({ id, name }),
+        icon: '🗑️',
+        className: 'text-red-600 hover:text-red-700 hover:bg-red-50'
+      }
+      // Add more options here as needed
+    ];
+
     return (
         <article className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-100">
             <div className="relative">
@@ -38,8 +50,17 @@ export default function CowCard({ id, name, upp, mark, isRegistered, birthDate, 
                     className="w-full h-48 object-cover"
                     loading="lazy"
                 />
-                <div className="absolute top-3 right-3">
+                <div className="absolute top-3 right-3 flex items-center gap-2">
                     <Badge>{SEX_TEXT[sex]}</Badge>
+                    <MoreOptionsMenu options={menuOptions} />
+                </div>
+                <div className="absolute top-3 left-3">
+                    <input
+                        type="checkbox"
+                        checked={selected}
+                        onChange={() => onSelect(id)}
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
                 </div>
             </div>
 
@@ -95,4 +116,7 @@ CowCard.propTypes = {
     sex: PropTypes.string.isRequired,
     earingId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     hasEaring: PropTypes.bool.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    selected: PropTypes.bool.isRequired,
+    onSelect: PropTypes.func.isRequired,
 }
