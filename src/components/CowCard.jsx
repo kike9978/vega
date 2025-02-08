@@ -1,31 +1,98 @@
-import cowImage from "../assets/imgs/vaca-test.webp"
-import Chip from "./Chip"
+import PropTypes from "prop-types"
 import { SEX_TEXT, UPP_TEXT, MARK_TEXT } from "../data/types"
+import Badge from "./cards/Badge"
+import CardHeader from "./cards/CardHeader"
+import DetailItem from "./cards/DetailItem"
+import { getCowImage } from "../data/cowImages"
+import Tooltip from "./common/Tooltip"
 
-export default function CowCard({ name, upp, mark, isRegistered, birthDate, breed, sex, earingId, hasEaring }) {
-
+export default function CowCard({ id, name, upp, mark, isRegistered, birthDate, breed, sex, earingId, hasEaring }) {
     const date = new Date()
+    const months = date.getMonth() - birthDate.getMonth() + 
+      (date.getDate() < birthDate.getDate() ? -1 : 0)
+    const age = date.getFullYear() - birthDate.getFullYear() - 
+      (months < 0 ? 1 : 0)
+    const adjustedMonths = months < 0 ? months + 12 : months
 
+    const renderSubtitle = () => (
+        <div className="flex items-center gap-2">
+            <Tooltip text={`Fecha de nacimiento: ${birthDate.toLocaleDateString()}`}>
+                <span>
+                    {age} {age === 1 ? 'año' : 'años'}
+                    {adjustedMonths > 0 && `, ${adjustedMonths} ${adjustedMonths === 1 ? 'mes' : 'meses'}`}
+                </span>
+            </Tooltip>
+            <span className="text-gray-300">•</span>
+            <span>
+                Cruza: {breed}
+            </span>
+        </div>
+    )
 
     return (
-        <article className="rounded-lg border border-black border-solid overflow-hidden ">
-            <img src={cowImage} alt="Foto de vaca" />
-            <div className="px-2 py-2">
-                <h2 className="text-xl font-bold text-center">{name} <span className="absolute">{SEX_TEXT[sex]}</span></h2>
-
-
-                <div className="flex  justify-between">
-                    <p>{date.getFullYear() - birthDate.getFullYear()} años</p>
-                    <p>Fierro: {MARK_TEXT[mark]}</p>
-                    <p>Cruza: {breed}</p>
-                </div>
-                <div className="flex gap-2 justify-between">
-                    <p className={`${!isRegistered && "text-red-500"}`}>{isRegistered ? `Arete: ${earingId}` : "Sin registrar"}</p>
-                    {!hasEaring && isRegistered && <p className="text-red-500">🚨 Sin arete 🚨</p>}
-                    <Chip text={UPP_TEXT[upp]} />
+        <article className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-100">
+            <div className="relative">
+                <img 
+                    src={getCowImage(id)} 
+                    alt={`Foto de ${name}`}
+                    className="w-full h-48 object-cover"
+                    loading="lazy"
+                />
+                <div className="absolute top-3 right-3">
+                    <Badge>{SEX_TEXT[sex]}</Badge>
                 </div>
             </div>
 
+            <div className="p-4 space-y-4">
+                <CardHeader 
+                    title={name}
+                    subtitle={renderSubtitle()}
+                />
+
+                <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                        <DetailItem 
+                            label="Fierro"
+                            value={MARK_TEXT[mark]}
+                        />
+                        <Badge variant="info">
+                            {UPP_TEXT[upp]}
+                        </Badge>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                        {isRegistered ? (
+                            <DetailItem 
+                                label="Arete"
+                                value={earingId}
+                            />
+                        ) : (
+                            <span className="text-sm text-red-500 font-medium">
+                                Sin registrar
+                            </span>
+                        )}
+                        
+                        {!hasEaring && isRegistered && (
+                            <Badge variant="error">
+                                Sin arete
+                            </Badge>
+                        )}
+                    </div>
+                </div>
+            </div>
         </article>
     )
+}
+
+CowCard.propTypes = {
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    upp: PropTypes.string.isRequired,
+    mark: PropTypes.string.isRequired,
+    isRegistered: PropTypes.bool.isRequired,
+    birthDate: PropTypes.instanceOf(Date).isRequired,
+    breed: PropTypes.string.isRequired,
+    sex: PropTypes.string.isRequired,
+    earingId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    hasEaring: PropTypes.bool.isRequired,
 }
