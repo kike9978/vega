@@ -21,11 +21,11 @@ export const SEX_TEXT = {
 };
 
 export const UPP_TEXT = {
-    [UPP.EL_JOBO]: "El Jobo",
-    [UPP.TACAHUITE]: "Tacahuite"
+    'tacahuite': 'Tacahuite',
+    'elJobo': 'El Jobo'
 };
 
 export const MARK_TEXT = {
-    [MARK.IL]: "IL",
-    [MARK.FM]: "FM"
+    'iL': 'IL',
+    'fM': 'FM'
 };

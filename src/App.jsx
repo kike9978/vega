@@ -35,6 +35,7 @@ function App() {
     birthDateFrom: '',
     birthDateTo: '',
     upp: '',
+    mark: '',
   })
   const [viewMode, setViewMode] = useState(VIEW_MODES.CARD)
   const [cowToDelete, setCowToDelete] = useState(null)
@@ -54,7 +55,8 @@ function App() {
     if (advancedFilters.hasEaring && !cow.hasEaring) return false
     if (advancedFilters.earingId && cow.earingId?.toString() !== advancedFilters.earingId) return false
     if (advancedFilters.breed && !cow.breed.toLowerCase().includes(advancedFilters.breed.toLowerCase())) return false
-    if (advancedFilters.upp && !cow.upp.toLowerCase().includes(advancedFilters.upp.toLowerCase())) return false
+    if (advancedFilters.upp && cow.upp !== advancedFilters.upp) return false
+    if (advancedFilters.mark && cow.mark !== advancedFilters.mark) return false
     
     if (advancedFilters.birthDateFrom || advancedFilters.birthDateTo) {
       const cowDate = new Date(cow.birthDate)
@@ -168,6 +170,18 @@ function App() {
     }
   ];
 
+  const hasActiveFilters = (filters) => {
+    return filters.sex !== FILTER_SEX.ALL ||
+        filters.isRegistered ||
+        filters.hasEaring ||
+        filters.earingId ||
+        filters.breed ||
+        filters.upp ||
+        filters.mark ||
+        filters.birthDateFrom ||
+        filters.birthDateTo;
+  };
+
   const headerActions = (
     <>
       <BatchOperations 
@@ -197,7 +211,16 @@ function App() {
       />
       <Button 
         onClick={() => setIsSidePanelOpen(true)} 
-        text="Filtros avanzados"
+        text={
+            <>
+                Filtros avanzados
+                {hasActiveFilters(advancedFilters) && (
+                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-white">
+                        •
+                    </span>
+                )}
+            </>
+        }
         className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md"
       />
     </>

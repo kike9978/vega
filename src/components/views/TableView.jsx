@@ -2,8 +2,64 @@ import PropTypes from 'prop-types';
 import { SEX_TEXT, UPP_TEXT, MARK_TEXT } from '../../data/types';
 import Button from '../Button';
 import MoreOptionsMenu from '../common/MoreOptionsMenu';
+import { useState } from 'react';
 
 export default function TableView({ cows, onDelete, selectedCows, onSelect, getMenuOptions }) {
+  const [sortConfig, setSortConfig] = useState({
+    key: null,
+    direction: 'asc'
+  });
+
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getSortedCows = () => {
+    if (!sortConfig.key) return cows;
+
+    return [...cows].sort((a, b) => {
+      let aValue = a[sortConfig.key];
+      let bValue = b[sortConfig.key];
+
+      // Special handling for dates
+      if (sortConfig.key === 'birthDate') {
+        aValue = new Date(aValue).getTime();
+        bValue = new Date(bValue).getTime();
+      }
+
+      // Special handling for text mappings
+      if (sortConfig.key === 'sex') {
+        aValue = SEX_TEXT[aValue];
+        bValue = SEX_TEXT[bValue];
+      } else if (sortConfig.key === 'upp') {
+        aValue = UPP_TEXT[aValue];
+        bValue = UPP_TEXT[bValue];
+      } else if (sortConfig.key === 'mark') {
+        aValue = MARK_TEXT[aValue];
+        bValue = MARK_TEXT[bValue];
+      }
+
+      if (aValue < bValue) {
+        return sortConfig.direction === 'asc' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  };
+
+  const getSortIcon = (key) => {
+    if (sortConfig.key !== key) return '↕️';
+    return sortConfig.direction === 'asc' ? '↑' : '↓';
+  };
+
+  const sortedCows = getSortedCows();
+
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
@@ -23,29 +79,61 @@ export default function TableView({ cows, onDelete, selectedCows, onSelect, getM
                 }}
               />
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Nombre
+            <th 
+              scope="col" 
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              onClick={() => handleSort('name')}
+            >
+              Nombre {getSortIcon('name')}
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Sexo
+            <th 
+              scope="col" 
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              onClick={() => handleSort('sex')}
+            >
+              Sexo {getSortIcon('sex')}
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              UPP
+            <th 
+              scope="col" 
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              onClick={() => handleSort('upp')}
+            >
+              UPP {getSortIcon('upp')}
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Fierro
+            <th 
+              scope="col" 
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              onClick={() => handleSort('mark')}
+            >
+              Fierro {getSortIcon('mark')}
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Registro
+            <th 
+              scope="col" 
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              onClick={() => handleSort('isRegistered')}
+            >
+              Registro {getSortIcon('isRegistered')}
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Arete
+            <th 
+              scope="col" 
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              onClick={() => handleSort('earingId')}
+            >
+              Arete {getSortIcon('earingId')}
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Fecha de Nacimiento
+            <th 
+              scope="col" 
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              onClick={() => handleSort('birthDate')}
+            >
+              Fecha de Nacimiento {getSortIcon('birthDate')}
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Cruza
+            <th 
+              scope="col" 
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+              onClick={() => handleSort('breed')}
+            >
+              Cruza {getSortIcon('breed')}
             </th>
             <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
               Acciones
@@ -53,7 +141,7 @@ export default function TableView({ cows, onDelete, selectedCows, onSelect, getM
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {cows.map((cow) => {
+          {sortedCows.map((cow) => {
             return (
               <tr key={cow.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
