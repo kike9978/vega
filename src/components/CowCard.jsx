@@ -8,7 +8,7 @@ import Tooltip from "./common/Tooltip"
 import Button from "./Button"
 import MoreOptionsMenu from './common/MoreOptionsMenu'
 
-export default function CowCard({ id, name, upp, mark, isRegistered, birthDate, breed, sex, earingId, hasEaring, onDelete, selected, onSelect }) {
+export default function CowCard({ id, name, upp, mark, isRegistered, birthDate, breed, sex, earingId, hasEaring, onDelete, selected, onSelect, getMenuOptions }) {
     const date = new Date()
     const months = date.getMonth() - birthDate.getMonth() + 
       (date.getDate() < birthDate.getDate() ? -1 : 0)
@@ -31,15 +31,7 @@ export default function CowCard({ id, name, upp, mark, isRegistered, birthDate, 
         </div>
     )
 
-    const menuOptions = [
-      {
-        label: 'Eliminar',
-        onClick: () => onDelete({ id, name }),
-        icon: '🗑️',
-        className: 'text-red-600 hover:text-red-700 hover:bg-red-50'
-      }
-      // Add more options here as needed
-    ];
+    const menuOptions = getMenuOptions({ id, name, upp, mark, isRegistered, birthDate, breed, sex, earingId, hasEaring });
 
     return (
         <article className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-100">
@@ -119,4 +111,5 @@ CowCard.propTypes = {
     onDelete: PropTypes.func.isRequired,
     selected: PropTypes.bool.isRequired,
     onSelect: PropTypes.func.isRequired,
+    getMenuOptions: PropTypes.func.isRequired,
 }

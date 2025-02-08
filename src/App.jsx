@@ -39,6 +39,7 @@ function App() {
   const [viewMode, setViewMode] = useState(VIEW_MODES.CARD)
   const [cowToDelete, setCowToDelete] = useState(null)
   const [selectedCows, setSelectedCows] = useState(new Set())
+  const [cowToEdit, setCowToEdit] = useState(null)
 
   const {
     filterText,
@@ -202,6 +203,42 @@ function App() {
     </>
   )
 
+  const handleEdit = (cow) => {
+    // Make sure we pass a copy of the cow with the correct date format
+    const cowToEditData = {
+      ...cow,
+      birthDate: new Date(cow.birthDate) // Ensure birthDate is a Date object
+    };
+    setCowToEdit(cowToEditData);
+    setIsModalOpen(true);
+  };
+
+  const handleUpdate = (updatedCow) => {
+    const updatedCows = cows.map(cow => 
+      cow.id === updatedCow.id ? updatedCow : cow
+    );
+    setCows(updatedCows);
+    cowService.setCows(updatedCows);
+    setIsModalOpen(false);
+    setCowToEdit(null);
+  };
+
+  // Update the menu options in both CowCard and TableView
+  const getMenuOptions = (cow) => [
+    {
+      label: 'Editar',
+      onClick: () => handleEdit(cow),
+      icon: '✏️',
+      className: 'text-blue-600 hover:text-blue-700 hover:bg-blue-50'
+    },
+    {
+      label: 'Eliminar',
+      onClick: () => handleDelete(cow),
+      icon: '🗑️',
+      className: 'text-red-600 hover:text-red-700 hover:bg-red-50'
+    }
+  ];
+
   return (
     <PageContainer>
       <Card>
@@ -225,6 +262,7 @@ function App() {
             onDelete={handleDelete}
             selectedCows={selectedCows}
             onSelect={handleSelect}
+            getMenuOptions={getMenuOptions}
           />
         ) : (
           <TableView 
@@ -232,16 +270,27 @@ function App() {
             onDelete={handleDelete}
             selectedCows={selectedCows}
             onSelect={handleSelect}
+            getMenuOptions={getMenuOptions}
           />
         )}
       </Card>
 
       <Modal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Registrar ganado"
+        onClose={() => {
+          setIsModalOpen(false);
+          setCowToEdit(null);
+        }}
+        title={cowToEdit ? "Editar ganado" : "Registrar ganado"}
       >
-        <CowForm onSubmit={createCow} />
+        <CowForm 
+          onSubmit={cowToEdit ? handleUpdate : createCow}
+          onClose={() => {
+            setIsModalOpen(false);
+            setCowToEdit(null);
+          }}
+          initialData={cowToEdit}
+        />
       </Modal>
 
       <SidePanel 

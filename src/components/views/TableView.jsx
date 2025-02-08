@@ -3,7 +3,7 @@ import { SEX_TEXT, UPP_TEXT, MARK_TEXT } from '../../data/types';
 import Button from '../Button';
 import MoreOptionsMenu from '../common/MoreOptionsMenu';
 
-export default function TableView({ cows, onDelete, selectedCows, onSelect }) {
+export default function TableView({ cows, onDelete, selectedCows, onSelect, getMenuOptions }) {
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
@@ -54,16 +54,6 @@ export default function TableView({ cows, onDelete, selectedCows, onSelect }) {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {cows.map((cow) => {
-            const menuOptions = [
-              {
-                label: 'Eliminar',
-                onClick: () => onDelete(cow),
-                icon: '🗑️',
-                className: 'text-red-600 hover:text-red-700 hover:bg-red-50'
-              }
-              // Add more options here as needed
-            ];
-
             return (
               <tr key={cow.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -99,7 +89,7 @@ export default function TableView({ cows, onDelete, selectedCows, onSelect }) {
                   {cow.breed}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                  <MoreOptionsMenu options={menuOptions} />
+                  <MoreOptionsMenu options={getMenuOptions(cow)} />
                 </td>
               </tr>
             );
@@ -128,4 +118,5 @@ TableView.propTypes = {
   onDelete: PropTypes.func.isRequired,
   selectedCows: PropTypes.instanceOf(Set).isRequired,
   onSelect: PropTypes.func.isRequired,
+  getMenuOptions: PropTypes.func.isRequired,
 }; 

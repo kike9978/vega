@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "../Button";
 import RadioFieldset from "../RadioFieldset";
 import Select from "../Select";
@@ -6,11 +6,50 @@ import Input from "./Input";
 import Card from "../layout/Card";
 import PropTypes from 'prop-types';
 
-export default function CowForm({ onSubmit, onClose }) {
-    const [isCowRegistered, setIsCowRegistered] = useState(false)
-    const [earingIdValue, setEaringIdValue] = useState("")
-    const [hasEaringValue, setHasEaringValue] = useState(true)
+export default function CowForm({ onSubmit, onClose, initialData = null }) {
+    const [formData, setFormData] = useState({
+        name: initialData?.name || '',
+        sex: initialData?.sex || '',
+        upp: initialData?.upp || '',
+        mark: initialData?.mark || '',
+        breed: initialData?.breed || '',
+        birthDate: initialData?.birthDate || new Date(),
+        isRegistered: initialData?.isRegistered || false,
+        hasEaring: initialData?.hasEaring || false,
+        earingId: initialData?.earingId || ''
+    });
+
+    const [isCowRegistered, setIsCowRegistered] = useState(initialData?.isRegistered || false);
+    const [earingIdValue, setEaringIdValue] = useState(initialData?.earingId || "");
+    const [hasEaringValue, setHasEaringValue] = useState(initialData?.hasEaring ?? true);
     const [errors, setErrors] = useState({})
+
+    // Update form data when initialData changes
+    useEffect(() => {
+        if (initialData) {
+            setFormData({
+                name: initialData.name,
+                sex: initialData.sex,
+                upp: initialData.upp,
+                mark: initialData.mark,
+                breed: initialData.breed,
+                birthDate: initialData.birthDate,
+                isRegistered: initialData.isRegistered,
+                hasEaring: initialData.hasEaring,
+                earingId: initialData.earingId || ''
+            });
+            setIsCowRegistered(initialData.isRegistered);
+            setHasEaringValue(initialData.hasEaring);
+            setEaringIdValue(initialData.earingId || '');
+        }
+    }, [initialData]);
+
+    // Format date for input
+    const formatDateForInput = (date) => {
+        if (!date) return '';
+        const d = new Date(date);
+        return d.toISOString().split('T')[0];
+    };
 
     const validateForm = (formData) => {
         const newErrors = {};
@@ -30,11 +69,11 @@ export default function CowForm({ onSubmit, onClose }) {
 
         // Registered cow validations
         if (isCowRegistered) {
-            if (hasEaringValue && !earingIdValue?.trim()) {
+            if (hasEaringValue && !earingIdValue) {
                 newErrors.earingId = 'El número de arete es requerido para vacas registradas con arete';
             }
 
-            if (earingIdValue && !/^\d+$/.test(earingIdValue)) {
+            if (earingIdValue && !/^\d+$/.test(earingIdValue.toString())) {
                 newErrors.earingId = 'El número de arete debe contener solo números';
             }
         }
@@ -62,7 +101,8 @@ export default function CowForm({ onSubmit, onClose }) {
             isRegistered: isCowRegistered,
             hasEaring: hasEaringValue,
             earingId: earingIdValue,
-            birthDate: new Date(data.birthDate)
+            birthDate: new Date(data.birthDate),
+            id: initialData?.id // Keep the same ID if editing
         };
 
         if (!validateForm(cowData)) {
@@ -78,6 +118,8 @@ export default function CowForm({ onSubmit, onClose }) {
                 name="name" 
                 label="Nombre" 
                 required 
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
                 error={errors.name}
             />
 
@@ -87,6 +129,8 @@ export default function CowForm({ onSubmit, onClose }) {
                     label="Fecha de nacimiento"
                     type="date"
                     required
+                    value={formatDateForInput(formData.birthDate)}
+                    onChange={(e) => setFormData({...formData, birthDate: new Date(e.target.value)})}
                     error={errors.birthDate}
                 />
 
@@ -99,6 +143,8 @@ export default function CowForm({ onSubmit, onClose }) {
                         { value: "male", label: "Macho" },
                         { value: "female", label: "Hembra" }
                     ]}
+                    value={formData.sex}
+                    onChange={(value) => setFormData({...formData, sex: value})}
                 />
             </div>
 
@@ -139,8 +185,7 @@ export default function CowForm({ onSubmit, onClose }) {
                             disabled={!hasEaringValue}
                             value={earingIdValue}
                             onChange={(e) => setEaringIdValue(e.target.value)}
-                            type="number"
-                            min="1"
+                            type="text"
                             error={errors.earingId}
                         />
                     </>
@@ -156,6 +201,8 @@ export default function CowForm({ onSubmit, onClose }) {
                     options={[
                         { value: "elJobo", text: "El Jobo" },
                     ]}
+                    value={formData.upp}
+                    onChange={(value) => setFormData({...formData, upp: value})}
                 />
                 <Select
                     defaultOption={{ value: "iL", text: "IL" }}
@@ -165,6 +212,8 @@ export default function CowForm({ onSubmit, onClose }) {
                     options={[
                         { value: "fM", text: "FM" },
                     ]}
+                    value={formData.mark}
+                    onChange={(value) => setFormData({...formData, mark: value})}
                 />
                 <Select
                     defaultOption={{ value: "ill", text: "Ill" }}
@@ -175,6 +224,8 @@ export default function CowForm({ onSubmit, onClose }) {
                         { value: "orr", text: "Orr" },
                         { value: "mich", text: "Mich" }
                     ]}
+                    value={formData.breed}
+                    onChange={(value) => setFormData({...formData, breed: value})}
                 />
             </div>
 
@@ -186,7 +237,7 @@ export default function CowForm({ onSubmit, onClose }) {
                     className="bg-gray-100 hover:bg-gray-200 text-gray-700"
                 />
                 <Button 
-                    text="Crear vaca" 
+                    text={initialData ? "Guardar cambios" : "Crear vaca"}
                     type="submit"
                     className="bg-blue-600 hover:bg-blue-700 text-white"
                 />
@@ -197,5 +248,6 @@ export default function CowForm({ onSubmit, onClose }) {
 
 CowForm.propTypes = {
     onSubmit: PropTypes.func.isRequired,
-    onClose: PropTypes.func.isRequired
+    onClose: PropTypes.func.isRequired,
+    initialData: PropTypes.object
 };
